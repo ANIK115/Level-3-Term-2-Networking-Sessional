@@ -154,8 +154,21 @@ public class ServerThread implements Runnable{
                                pr.write(content);
                                pr.flush();
                            }else {
-                               System.out.println(dir.toString());
-                               System.out.println("dot not found");
+                               File errorFile = new File("src/network/server/view/error.html");
+                               FileInputStream fis = new FileInputStream(errorFile);
+                               BufferedReader br = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
+                               String line;
+                               while(( line = br.readLine()) != null ) {
+                                   sb.append( line );
+                                   sb.append( "\n" );
+                               }
+                               String content = sb.toString();
+                               pr.write("HTTP/1.1 404 NOT FOUND\r\n");
+                               pr.write("Server: Java HTTP Server: 1.0\r\n");
+                               pr.write("Date: " + new Date() + "\r\n");
+                               pr.write("\r\n");
+                               pr.write(content);
+                               pr.flush();
                            }
                        }else
                        {
@@ -176,7 +189,7 @@ public class ServerThread implements Runnable{
                                pr.write(content);
                                pr.flush();
                            }
-                           if(ext.equals("jpg"))
+                           else if(ext.equals("jpg"))
                            {
                                String fileName = tokens[1].substring(1);
                                File file = new File(fileName);
@@ -196,12 +209,99 @@ public class ServerThread implements Runnable{
                                    os.write(imgChunk, 0, count);
                                    os.flush();
                                }
+                           }else
+                           {
+                               String filename = tokens[1].substring(1);
+                               File file = new File(filename);
+                               if(file.exists())
+                               {
+                                   pr.write("HTTP/1.1 200 OK\r\n");
+                                   pr.write("Server: Java HTTP Server: 1.0\r\n");
+                                   pr.write("Date: " + new Date() + "\r\n");
+                                   pr.write("Content-Type: application/x-force-download\r\n");
+                                   pr.write("Content-Length: " + file.length() + "\r\n");
+                                   pr.write("\r\n");
+                                   pr.flush();
+
+                                   byte[] fileChunk = new byte[1024];
+                                   int count = 0;
+                                   BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+                                   while((count = bis.read(fileChunk)) >0)
+                                   {
+                                       os.write(fileChunk, 0, count);
+                                       os.flush();
+                                   }
+
+                               }else
+                               {
+                                   File errorFile = new File("src/network/server/view/error.html");
+                                   FileInputStream fis = new FileInputStream(errorFile);
+                                   BufferedReader br = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
+                                   String line;
+                                   while(( line = br.readLine()) != null ) {
+                                       sb.append( line );
+                                       sb.append( "\n" );
+                                   }
+                                   String content = sb.toString();
+                                   pr.write("HTTP/1.1 404 NOT FOUND\r\n");
+                                   pr.write("Server: Java HTTP Server: 1.0\r\n");
+                                   pr.write("Date: " + new Date() + "\r\n");
+                                   pr.write("\r\n");
+                                   pr.write(content);
+                                   pr.flush();
+                               }
                            }
                        }
-
-
                }
 
+               }else if(input.startsWith("UPLOAD"))
+               {
+                   String[] request = input.split(" ");
+                   String filename = request[1];
+                   System.out.println("Requested file from client: "+filename);
+                   int lastIndex = input.lastIndexOf(".");
+                   if(lastIndex < 0)
+                   {
+                       return;
+                   }
+                   String extension = input.substring(lastIndex+1);
+                   if(extension.equals("txt") || extension.equals("png") || extension.equals("jpg") || extension.equals("mp4")
+                   || extension.equals("jpeg"))
+                   {
+                       String response = "Accepted";
+                       pr.write(response);
+                       pr.write("\r\n");
+                       pr.flush();
+
+                       String filePath = "src/network/server/uploaded/"+filename;
+                       File file = new File(filePath);
+                       FileOutputStream fos = new FileOutputStream(file);
+
+                       byte[] fileChunk = new byte[1024];
+                       int count = 0;
+
+                       while((count = is.read(fileChunk)) > 0)
+                       {
+                           fos.write(fileChunk, 0, count);
+                           fos.flush();
+                       }
+                       System.out.println("Uploaded successfully");
+                       fos.close();
+                       is.close();
+                       client.close();
+                   }else
+                   {
+                       String response = "Rejected";
+                       System.out.println("File upload request: "+response);
+                       pr.write(response);
+                       pr.write("\r\n");
+                       pr.flush();
+                   }
+
+
+               }else
+               {
+                   System.out.println("Not a valid request!");
                }
            }
            client.close();
