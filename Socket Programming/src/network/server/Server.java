@@ -16,6 +16,7 @@ public class Server {
         {
             //accept client request
             Socket client = serverSocket.accept();
+            System.out.println("New client request accepted......");
             //this function opens a new thread to serve the client request and again go to listening state
             serve(client);
         }

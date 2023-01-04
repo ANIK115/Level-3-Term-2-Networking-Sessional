@@ -1,0 +1,255 @@
+
+
+HTTP request: GET / HTTP/1.1
+HTTP response: HTTP/1.1 200 OK
+Server: Java HTTP Server: 1.0
+Date: Wed Jan 04 23:55:50 BDT 2023
+Content-Type: text/html
+Content-Length: 169
+
+Content:
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" href="data:,">
+</head>
+<body>
+<a href="root">root</a>
+</body>
+</html>
+
+
+HTTP request: GET /root HTTP/1.1
+HTTP response: HTTP/1.1 200 OK
+Server: Java HTTP Server: 1.0
+Date: Wed Jan 04 23:56:03 BDT 2023
+Content-Type: text/html
+Content-Length: 382
+
+<html>
+  <head>
+    <title>Home Page</title>
+    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
+    <link rel=\"icon\" href=\"data:,\">
+  </head>
+  <body>
+<a href= "/root\dir1">dir1<br><a href= "/root\doc1.docx">doc1.docx<br><a href= "/root\file1.txt">file1.txt<br><a href= "/root\lec.mp4">lec.mp4<br><a href= "/root\movie.mkv">movie.mkv<br></body>
+</html>
+
+
+HTTP request: GET /root/lec.mp4 HTTP/1.1
+HTTP response: HTTP/1.1 200 OK
+Server: Java HTTP Server: 1.0
+Date: Wed Jan 04 23:56:15 BDT 2023
+Content-Type: application/x-force-download
+Content-Length: 91143861
+
+Content:
+root\lec.mp4
+
+HTTP request: GET /root/dir1 HTTP/1.1
+HTTP response: HTTP/1.1 200 OK
+Server: Java HTTP Server: 1.0
+Date: Wed Jan 04 23:56:35 BDT 2023
+Content-Type: text/html
+Content-Length: 374
+
+<html>
+  <head>
+    <title>Home Page</title>
+    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
+    <link rel=\"icon\" href=\"data:,\">
+  </head>
+  <body>
+<a href= "/root\dir1\dir2">dir2<br><a href= "/root\dir1\file2.txt">file2.txt<br><a href= "/root\dir1\imgsend.jpg">imgsend.jpg<br><a href= "/root\dir1\pdfsend.pdf">pdfsend.pdf<br></body>
+</html>
+
+
+HTTP request: GET /root/dir1/imgsend.jpg HTTP/1.1
+HTTP response: HTTP/1.1 200 OK
+Server: Java HTTP Server: 1.0
+Date: Wed Jan 04 23:56:38 BDT 2023
+Content-Type: image/jpg
+Content-Length: 2718541
+
+Content:
+root\dir1\imgsend.jpg
+
+HTTP request: GET / HTTP/1.1
+HTTP response: HTTP/1.1 200 OK
+Server: Java HTTP Server: 1.0
+Date: Thu Jan 05 00:02:26 BDT 2023
+Content-Type: text/html
+Content-Length: 169
+
+Content:
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" href="data:,">
+</head>
+<body>
+<a href="root">root</a>
+</body>
+</html>
+
+
+HTTP request: GET /root HTTP/1.1
+HTTP response: HTTP/1.1 200 OK
+Server: Java HTTP Server: 1.0
+Date: Thu Jan 05 00:02:28 BDT 2023
+Content-Type: text/html
+Content-Length: 306
+
+<html>
+  <head>
+    <title>Home Page</title>
+    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
+    <link rel=\"icon\" href=\"data:,\">
+  </head>
+  <body>
+<a href= "/root\dir1">dir1<br><a href= "/root\doc1.docx">doc1.docx<br><a href= "/root\file1.txt">file1.txt<br></body>
+</html>
+
+
+HTTP request: GET /root HTTP/1.1
+HTTP response: HTTP/1.1 200 OK
+Server: Java HTTP Server: 1.0
+Date: Thu Jan 05 00:03:51 BDT 2023
+Content-Type: text/html
+Content-Length: 306
+
+<html>
+  <head>
+    <title>Home Page</title>
+    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
+    <link rel=\"icon\" href=\"data:,\">
+  </head>
+  <body>
+<a href= "/root\dir1">dir1<br><a href= "/root\doc1.docx">doc1.docx<br><a href= "/root\file1.txt">file1.txt<br></body>
+</html>
+
+
+HTTP request: GET /favicon.ico HTTP/1.1
+HTTP response: HTTP/1.1 404 NOT FOUND
+Server: Java HTTP Server: 1.0
+Date: Thu Jan 05 00:03:52 BDT 2023
+
+Content:
+<html>
+<head>
+<title>
+    404 Error Page
+</title>
+</head>
+
+<body>
+<h2>
+    404: PAGE NOT FOUND
+</h2>
+</body>
+</html>
+
+
+HTTP request: GET /root/file1.txt HTTP/1.1
+HTTP response: HTTP/1.1 200 OK
+Server: Java HTTP Server: 1.0
+Date: Thu Jan 05 00:04:03 BDT 2023
+Content-Type: text/html
+Content-Length: 203
+
+Content:
+<html>
+  <head>
+    <title>Home Page</title>
+    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
+    <link rel=\"icon\" href=\"data:,\">
+  </head>
+  <body>1234<br></body>
+</html>
+
+
+HTTP request: GET /root/dir1 HTTP/1.1
+HTTP response: HTTP/1.1 200 OK
+Server: Java HTTP Server: 1.0
+Date: Thu Jan 05 00:04:07 BDT 2023
+Content-Type: text/html
+Content-Length: 374
+
+<html>
+  <head>
+    <title>Home Page</title>
+    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
+    <link rel=\"icon\" href=\"data:,\">
+  </head>
+  <body>
+<a href= "/root\dir1\dir2">dir2<br><a href= "/root\dir1\file2.txt">file2.txt<br><a href= "/root\dir1\imgsend.jpg">imgsend.jpg<br><a href= "/root\dir1\pdfsend.pdf">pdfsend.pdf<br></body>
+</html>
+
+
+HTTP request: GET /root/dir1/imgsend.jpg HTTP/1.1
+HTTP response: HTTP/1.1 200 OK
+Server: Java HTTP Server: 1.0
+Date: Thu Jan 05 00:04:09 BDT 2023
+Content-Type: image/jpg
+Content-Length: 2718541
+
+Content:
+root\dir1\imgsend.jpg
+
+HTTP request: null
+HTTP response: 
+
+HTTP request: GET / HTTP/1.1
+HTTP response: HTTP/1.1 200 OK
+Server: Java HTTP Server: 1.0
+Date: Thu Jan 05 00:06:27 BDT 2023
+Content-Type: text/html
+Content-Length: 169
+
+Content:
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" href="data:,">
+</head>
+<body>
+<a href="root">root</a>
+</body>
+</html>
+
+
+HTTP request: GET /root HTTP/1.1
+HTTP response: HTTP/1.1 200 OK
+Server: Java HTTP Server: 1.0
+Date: Thu Jan 05 00:06:35 BDT 2023
+Content-Type: text/html
+Content-Length: 306
+
+<html>
+  <head>
+    <title>Home Page</title>
+    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
+    <link rel=\"icon\" href=\"data:,\">
+  </head>
+  <body>
+<a href= "/root\dir1">dir1<br><a href= "/root\doc1.docx">doc1.docx<br><a href= "/root\file1.txt">file1.txt<br></body>
+</html>
+
+
+HTTP request: GET /root/file1.txt HTTP/1.1
+HTTP response: HTTP/1.1 200 OK
+Server: Java HTTP Server: 1.0
+Date: Thu Jan 05 00:06:41 BDT 2023
+Content-Type: text/html
+Content-Length: 203
+
+Content:
+<html>
+  <head>
+    <title>Home Page</title>
+    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
+    <link rel=\"icon\" href=\"data:,\">
+  </head>
+  <body>1234<br></body>
+</html>

@@ -10,8 +10,10 @@ public class ServerThread implements Runnable{
     Socket client;
     OutputStream os;
     InputStream is;
+    PrintWriter logWriter;
 
     public ServerThread(Socket client) throws IOException {
+        logWriter = new PrintWriter(new FileWriter("log.txt", true));
         this.client = client;
         this.os = this.client.getOutputStream();
         this.is = this.client.getInputStream();
@@ -90,6 +92,24 @@ public class ServerThread implements Runnable{
         return webpage;
     }
 
+    public void helperWriter(PrintWriter writer, String responseHeader,Date date, String contentType,long length,String content)
+    {
+        writer.write(responseHeader);
+        writer.write("Server: Java HTTP Server: 1.0\r\n");
+        writer.write("Date: " + date + "\r\n");
+        if(length > 0)
+        {
+            writer.write(contentType);
+            writer.write("Content-Length: " + length + "\r\n");
+        }
+        writer.write("\r\n");
+        if(content.length() > 0)
+        {
+            writer.write(content);
+        }
+        writer.flush();
+    }
+
 
     @Override
     public void run() {
@@ -108,6 +128,8 @@ public class ServerThread implements Runnable{
 
        try {
            String input = inputbr.readLine();
+           logWriter.write("\n\nHTTP request: "+input);
+           logWriter.write("\nHTTP response: ");
            if(input != null) {
                StringBuffer sb = new StringBuffer();
                String temp = "";
@@ -128,16 +150,14 @@ public class ServerThread implements Runnable{
                        sb.append("</body>\n");
                        sb.append("</html>\n");
                        String content = sb.toString();
-                       pr.write("HTTP/1.1 200 OK\r\n");
-                       pr.write("Server: Java HTTP Server: 1.0\r\n");
-                       pr.write("Date: " + new Date() + "\r\n");
-                       pr.write("Content-Type: text/html\r\n");
-                       pr.write("Content-Length: " + content.length() + "\r\n");
-                       pr.write("\r\n");
-                       pr.write(content);
-                       pr.flush();
+                       Date date = new Date();
+                       helperWriter(pr,"HTTP/1.1 200 OK\r\n", date, "Content-Type: text/html\r\n", content.length(), content );
+
+                       //writing log file
+                       helperWriter(logWriter,"HTTP/1.1 200 OK\r\n", date,  "Content-Type: text/html\r\n", content.length(), "Content:\n"+content );
+
                        System.out.println("Contents shown");
-                   }if(tokens[1].length() > 1){
+                   }else if(tokens[1].length() > 1){
                        if(tokens[1].lastIndexOf(".") == -1)
                        {
                            System.out.println("input: "+input);
@@ -145,14 +165,10 @@ public class ServerThread implements Runnable{
                            if(dir.exists())
                            {
                                String content = directoryContents(dir);
-                               pr.write("HTTP/1.1 200 OK\r\n");
-                               pr.write("Server: Java HTTP Server: 1.0\r\n");
-                               pr.write("Date: " + new Date() + "\r\n");
-                               pr.write("Content-Type: text/html\r\n");
-                               pr.write("Content-Length: " + content.length() + "\r\n");
-                               pr.write("\r\n");
-                               pr.write(content);
-                               pr.flush();
+                               Date date = new Date();
+                               helperWriter(pr, "HTTP/1.1 200 OK\r\n", date, "Content-Type: text/html\r\n", content.length(), content);
+                               //writing log file
+                               helperWriter(logWriter, "HTTP/1.1 200 OK\r\n", date, "Content-Type: text/html\r\n", content.length(), content);
                            }else {
                                File errorFile = new File("src/network/server/view/error.html");
                                FileInputStream fis = new FileInputStream(errorFile);
@@ -163,12 +179,12 @@ public class ServerThread implements Runnable{
                                    sb.append( "\n" );
                                }
                                String content = sb.toString();
-                               pr.write("HTTP/1.1 404 NOT FOUND\r\n");
-                               pr.write("Server: Java HTTP Server: 1.0\r\n");
-                               pr.write("Date: " + new Date() + "\r\n");
-                               pr.write("\r\n");
-                               pr.write(content);
-                               pr.flush();
+                               Date date = new Date();
+                               helperWriter(pr, "HTTP/1.1 404 NOT FOUND\r\n", date, "", 0, content);
+
+                               //writing log file:
+                               helperWriter(logWriter, "HTTP/1.1 404 NOT FOUND\r\n", date, "", 0, "Content:\n"+content);
+
                            }
                        }else
                        {
@@ -180,26 +196,19 @@ public class ServerThread implements Runnable{
                                int ind = tokens[1].lastIndexOf("/");
                                String fileName = tokens[1].substring(1);
                                String content = showTextFile(new File(fileName));
-                               pr.write("HTTP/1.1 200 OK\r\n");
-                               pr.write("Server: Java HTTP Server: 1.0\r\n");
-                               pr.write("Date: " + new Date() + "\r\n");
-                               pr.write("Content-Type: text/html\r\n");
-                               pr.write("Content-Length: " + content.length() + "\r\n");
-                               pr.write("\r\n");
-                               pr.write(content);
-                               pr.flush();
+                               Date date = new Date();
+                               helperWriter(pr, "HTTP/1.1 200 OK\r\n", date,"Content-Type: text/html\r\n", content.length(), content );
+
+                               //writing log file:
+                               helperWriter(logWriter, "HTTP/1.1 200 OK\r\n", date,"Content-Type: text/html\r\n", content.length(), "Content:\n"+content );
+
                            }
                            else if(ext.equals("jpg"))
                            {
                                String fileName = tokens[1].substring(1);
                                File file = new File(fileName);
-                               pr.write("HTTP/1.1 200 OK\r\n");
-                               pr.write("Server: Java HTTP Server: 1.0\r\n");
-                               pr.write("Date: " + new Date() + "\r\n");
-                               pr.write("Content-Type: image/jpg\r\n");
-                               pr.write("Content-Length: " + file.length() + "\r\n");
-                               pr.write("\r\n");
-                               pr.flush();
+                               Date date = new Date();
+                               helperWriter(pr, "HTTP/1.1 200 OK\r\n", date, "Content-Type: image/jpg\r\n", file.length(), "");
                                byte[] imgChunk = new byte[1024];
                                int count = 0;
                                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
@@ -209,19 +218,53 @@ public class ServerThread implements Runnable{
                                    os.write(imgChunk, 0, count);
                                    os.flush();
                                }
+
+                               //writing log file
+                               helperWriter(logWriter, "HTTP/1.1 200 OK\r\n", date, "Content-Type: image/jpg\r\n", file.length(), "Content:\n"+file.toString());
+                           }else if(ext.equals("jpeg"))
+                           {
+                               String fileName = tokens[1].substring(1);
+                               File file = new File(fileName);
+                               Date date = new Date();
+                               helperWriter(pr, "HTTP/1.1 200 OK\r\n", date, "Content-Type: image/jpeg\r\n", file.length(), "");
+                               byte[] imgChunk = new byte[1024];
+                               int count = 0;
+                               BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+
+                               while((count = bis.read(imgChunk)) > 0)
+                               {
+                                   os.write(imgChunk, 0, count);
+                                   os.flush();
+                               }
+
+                               //writing log file
+                               helperWriter(logWriter, "HTTP/1.1 200 OK\r\n", date, "Content-Type: image/jpeg\r\n", file.length(), "Content:\n"+file.toString());
+                           }else if(ext.equals("png"))
+                           {
+                               String fileName = tokens[1].substring(1);
+                               File file = new File(fileName);
+                               Date date = new Date();
+                               helperWriter(pr, "HTTP/1.1 200 OK\r\n", date, "Content-Type: image/png\r\n", file.length(), "");
+                               byte[] imgChunk = new byte[1024];
+                               int count = 0;
+                               BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+
+                               while((count = bis.read(imgChunk)) > 0)
+                               {
+                                   os.write(imgChunk, 0, count);
+                                   os.flush();
+                               }
+
+                               //writing log file
+                               helperWriter(logWriter, "HTTP/1.1 200 OK\r\n", date, "Content-Type: image/png\r\n", file.length(), "Content:\n"+file.toString());
                            }else
                            {
                                String filename = tokens[1].substring(1);
                                File file = new File(filename);
                                if(file.exists())
                                {
-                                   pr.write("HTTP/1.1 200 OK\r\n");
-                                   pr.write("Server: Java HTTP Server: 1.0\r\n");
-                                   pr.write("Date: " + new Date() + "\r\n");
-                                   pr.write("Content-Type: application/x-force-download\r\n");
-                                   pr.write("Content-Length: " + file.length() + "\r\n");
-                                   pr.write("\r\n");
-                                   pr.flush();
+                                   Date date = new Date();
+                                   helperWriter(pr, "HTTP/1.1 200 OK\r\n", date, "Content-Type: application/x-force-download\r\n", file.length(), "");
 
                                    byte[] fileChunk = new byte[1024];
                                    int count = 0;
@@ -231,6 +274,9 @@ public class ServerThread implements Runnable{
                                        os.write(fileChunk, 0, count);
                                        os.flush();
                                    }
+
+                                   //writing log file
+                                   helperWriter(logWriter, "HTTP/1.1 200 OK\r\n", date, "Content-Type: application/x-force-download\r\n", file.length(), "Content:\n"+file.toString());
 
                                }else
                                {
@@ -243,12 +289,12 @@ public class ServerThread implements Runnable{
                                        sb.append( "\n" );
                                    }
                                    String content = sb.toString();
-                                   pr.write("HTTP/1.1 404 NOT FOUND\r\n");
-                                   pr.write("Server: Java HTTP Server: 1.0\r\n");
-                                   pr.write("Date: " + new Date() + "\r\n");
-                                   pr.write("\r\n");
-                                   pr.write(content);
-                                   pr.flush();
+                                   Date date = new Date();
+                                   helperWriter(pr, "HTTP/1.1 404 NOT FOUND\r\n", date, "", 0, content);
+
+                                   //writing log file
+                                   helperWriter(logWriter, "HTTP/1.1 404 NOT FOUND\r\n", date, "", 0, "Content:\n"+content);
+
                                }
                            }
                        }
@@ -256,8 +302,7 @@ public class ServerThread implements Runnable{
 
                }else if(input.startsWith("UPLOAD"))
                {
-                   String[] request = input.split(" ");
-                   String filename = request[1];
+                   String filename = input.substring(7);
                    System.out.println("Requested file from client: "+filename);
                    int lastIndex = input.lastIndexOf(".");
                    if(lastIndex < 0)
@@ -266,7 +311,7 @@ public class ServerThread implements Runnable{
                    }
                    String extension = input.substring(lastIndex+1);
                    if(extension.equals("txt") || extension.equals("png") || extension.equals("jpg") || extension.equals("mp4")
-                   || extension.equals("jpeg"))
+                   || extension.equals("jpeg") || extension.equals("mkv"))
                    {
                        String response = "Accepted";
                        pr.write(response);
@@ -285,10 +330,9 @@ public class ServerThread implements Runnable{
                            fos.write(fileChunk, 0, count);
                            fos.flush();
                        }
-                       System.out.println("Uploaded successfully");
+                       System.out.println(filename+" Uploaded successfully");
                        fos.close();
                        is.close();
-                       client.close();
                    }else
                    {
                        String response = "Rejected";
@@ -305,6 +349,8 @@ public class ServerThread implements Runnable{
                }
            }
            client.close();
+           pr.close();
+           logWriter.close();
        }catch (IOException e)
        {
            System.out.println(e.getMessage());

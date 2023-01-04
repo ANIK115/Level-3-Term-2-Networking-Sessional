@@ -13,7 +13,8 @@ public class client {
         {
             Socket clientSocket = new Socket("localhost", PORT);
             System.out.println("Enter a file name: ");
-            String filename = scanner.next();
+            String filename = scanner.nextLine();
+            System.out.println(filename);
             new ClientThread(clientSocket, filename);
         }
     }
