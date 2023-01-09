@@ -34,7 +34,7 @@ public class ClientThread implements Runnable{
         if(file.exists())
         {
             String requst = "UPLOAD "+file.toString();
-            System.out.println("Requested file: "+requst);
+            System.out.println("Requested file: "+file.toString());
             pr.write(requst);
             pr.write("\r\n");
             pr.flush();
@@ -81,11 +81,7 @@ public class ClientThread implements Runnable{
                 }
             }else
             {
-                String msg = "Cannot upload such files";
-                System.out.println(msg);
-//                pr.write(msg);
-//                pr.write("\r\n");
-//                pr.flush();
+                System.out.println("Response from server: "+response);
             }
         }else
         {

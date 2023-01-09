@@ -61,34 +61,8 @@ public class ServerThread implements Runnable{
         webpage += content;
         webpage+= "</body>\n" +
                 "</html>\n";
-        return webpage;
-    }
-
-    public String showImageFile(String file) throws IOException {
-        FileInputStream fis = new FileInputStream(new File(file));
-        BufferedReader br = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while(( line = br.readLine()) != null ) {
-            sb.append( line );
-            sb.append( "\n" );
-        }
-        String content = sb.toString();
-        return content;
-    }
-
-    public String showImage(String file)
-    {
-        String webpage = "<html>\n" +
-                "  <head>\n" +
-                "    <meta http-equiv=\\\"Content-Type\\\" content=\\\"text/html; charset=UTF-8\\\">\n" +
-                "    <link rel=\\\"icon\\\" href=\\\"data:,\\\">\n" +
-                "  </head>\n" +
-                "  <body>\n";
-        webpage += "<img src=\""+file+"\">\n";
-        webpage+= "</body>\n" +
-                "</html>\n";
-        System.out.println(webpage);
+        fis.close();
+        br.close();
         return webpage;
     }
 
@@ -203,7 +177,7 @@ public class ServerThread implements Runnable{
                                helperWriter(logWriter, "HTTP/1.1 200 OK\r\n", date,"Content-Type: text/html\r\n", content.length(), "Content:\n"+content );
 
                            }
-                           else if(ext.equals("jpg"))
+                           else if(ext.equalsIgnoreCase("jpg"))
                            {
                                String fileName = tokens[1].substring(1);
                                File file = new File(fileName);
@@ -221,7 +195,7 @@ public class ServerThread implements Runnable{
 
                                //writing log file
                                helperWriter(logWriter, "HTTP/1.1 200 OK\r\n", date, "Content-Type: image/jpg\r\n", file.length(), "Content:\n"+file.toString());
-                           }else if(ext.equals("jpeg"))
+                           }else if(ext.equalsIgnoreCase("jpeg"))
                            {
                                String fileName = tokens[1].substring(1);
                                File file = new File(fileName);
@@ -239,7 +213,7 @@ public class ServerThread implements Runnable{
 
                                //writing log file
                                helperWriter(logWriter, "HTTP/1.1 200 OK\r\n", date, "Content-Type: image/jpeg\r\n", file.length(), "Content:\n"+file.toString());
-                           }else if(ext.equals("png"))
+                           }else if(ext.equalsIgnoreCase("png"))
                            {
                                String fileName = tokens[1].substring(1);
                                File file = new File(fileName);
@@ -307,6 +281,11 @@ public class ServerThread implements Runnable{
                    int lastIndex = input.lastIndexOf(".");
                    if(lastIndex < 0)
                    {
+                       String response = "This is not a valid file name!";
+                       pr.write(response);
+                       pr.write("\r\n");
+                       pr.flush();
+                       System.out.println(response);
                        return;
                    }
                    String extension = input.substring(lastIndex+1);
