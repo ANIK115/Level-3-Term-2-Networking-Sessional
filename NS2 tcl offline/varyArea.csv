@@ -1,0 +1,6 @@
+Area Size, Number of Nodes, Number of flows, Sent Packets, Dropped Packets, Received Packets, Network throughput, End-to-end Delay, Packet delivery ratio, Packet drop ratio
+250 , 40 , 20 , 435 , 160 , 274 , 786.491 , 0.00709692 , 0.629885 , 0.367816
+500 , 40 , 20 , 289 , 116 , 159 , 503.406 , 0.171361 , 0.550173 , 0.401384
+750 , 40 , 20 , 377 , 134 , 240 , 723.726 , 0.194205 , 0.636605 , 0.355438
+1000 , 40 , 20 , 465 , 127 , 333 , 926.753 , 0.0932239 , 0.716129 , 0.273118
+1250 , 40 , 20 , 446 , 89 , 322 , 912.023 , 0.154817 , 0.721973 , 0.199552
